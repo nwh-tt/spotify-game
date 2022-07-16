@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Grid, Box, Divider, Typography, CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import SongPanel from "./SongPanel";
@@ -15,12 +15,13 @@ const darkTheme = createTheme({
   },
 });
 
-function processData(data) {
+function processData(data, index) {
   const song = {
     albumImage: data.album.images[0].url,
     artist: data.artists[0].name,
     name: data.name,
     popularity: data.popularity,
+    index: index,
   };
   return song;
 }
@@ -32,6 +33,9 @@ const getRandomNumber = () => {
 function App() {
   const [playlist, setPlaylist] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [leftSong, setLeftSong] = useState({});
+  const [rightSong, setRightSong] = useState({});
+
   useEffect(() => {
     const options = {
       method: "GET",
@@ -52,6 +56,15 @@ function App() {
       .catch((err) => console.error(err));
   }, []);
 
+  useEffect(() => {
+    if (loaded) {
+      const leftSongIndex = getRandomNumber();
+      setLeftSong(processData(playlist[leftSongIndex].track, leftSongIndex));
+      const rightSongIndex = getRandomNumber();
+      setRightSong(processData(playlist[rightSongIndex].track, rightSongIndex));
+    }
+  }, [loaded]);
+
   const styles = {
     outline: {
       height: "100vh",
@@ -71,10 +84,7 @@ function App() {
             sx={styles.outline}
           >
             <Grid item xs>
-              <SongPanel
-                song={processData(playlist[getRandomNumber()].track, loaded)}
-                left={true}
-              />
+              <SongPanel song={leftSong} left={true} />
             </Grid>
             <Divider orientation="vertical">
               <Typography
@@ -88,10 +98,7 @@ function App() {
               </Typography>
             </Divider>
             <Grid item xs>
-              <SongPanel
-                song={processData(playlist[getRandomNumber()].track, loaded)}
-                left={false}
-              />
+              <SongPanel song={rightSong} left={false} />
             </Grid>
           </Grid>
         </Box>

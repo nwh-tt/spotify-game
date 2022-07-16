@@ -2,6 +2,8 @@ import React from "react";
 import { Typography, Box, Button } from "@mui/material";
 // create a song object
 
+const checkIfHigher = () => {};
+
 export default function SongPanel(props) {
   // vertically center the song name
   const styles = {
@@ -19,7 +21,7 @@ export default function SongPanel(props) {
       margin: "10px",
     },
   };
-  // console.log(props.song);
+  console.log(props.song);
 
   return (
     <Box sx={styles.songName}>
@@ -37,6 +39,7 @@ export default function SongPanel(props) {
             color="primary"
             size="large"
             sx={styles.button}
+            onClick={checkIfHigher}
           >
             Higher
           </Button>
