@@ -117,9 +117,17 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <Typography sx={{ position: "absolute", left: "45%", fontSize: "25px" }}>
+      <Typography
+        sx={{ position: "absolute", left: "43.5%", fontSize: "25px" }}
+      >
         Score: {score}
       </Typography>
+      <Typography
+        sx={{ position: "absolute", left: "51.5%", fontSize: "25px" }}
+      >
+        Highscore: {score}
+      </Typography>
+
       <CenterPiece correctness={correctness} />
       {loaded ? (
         <Box>

@@ -29,7 +29,7 @@ export default function SongPanel(props) {
       <img src={props.song.albumImage} alt="error" />
       <Typography sx={styles.text}>{props.song.name}</Typography>
       <Typography sx={{ fontSize: "12px" }}>
-        {props.left ? "has" : "has a"}
+        {props.left ? "score is" : "is"}
       </Typography>
       {props.left ? (
         <Typography sx={styles.text}>{props.song.popularity}</Typography>
@@ -44,7 +44,7 @@ export default function SongPanel(props) {
               props.checkIfHigher(true);
             }}
           >
-            Higher
+            More Popular
           </Button>
           <Button
             variant="contained"
@@ -55,7 +55,7 @@ export default function SongPanel(props) {
               props.checkIfHigher(false);
             }}
           >
-            Lower
+            Less Popular
           </Button>
         </Box>
       )}
