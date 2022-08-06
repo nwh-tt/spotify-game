@@ -1,8 +1,9 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import { Grid, Box, Divider, Typography, CssBaseline } from "@mui/material";
+import { Grid, Box, Typography, CssBaseline, Zoom } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import SongPanel from "./SongPanel";
+import SongPanel from "./Components/SongPanel";
+import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 
 const darkTheme = createTheme({
   palette: {
@@ -35,6 +36,7 @@ function App() {
   const [loaded, setLoaded] = useState(false);
   const [leftSong, setLeftSong] = useState({});
   const [rightSong, setRightSong] = useState({});
+  const [correctness, setCorrectness] = useState("");
 
   useEffect(() => {
     const options = {
@@ -69,11 +71,60 @@ function App() {
     outline: {
       height: "100vh",
     },
+    centered: {
+      width: "90px",
+      height: "90px",
+      position: "fixed",
+      top: "40%",
+      left: "calc(50% - 45px)",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "#121212",
+      marginRight: "20px",
+      padding: "5px",
+      overflow: "hidden",
+    },
+    middleDivider: {
+      position: "absolute",
+      left: "50%",
+      transform: "translateX(-50%)",
+      height: "100vh",
+      width: "1px",
+      backgroundColor: "white",
+    },
+  };
+
+  const checkIfHigher = (clickedHigher) => {
+    const higher = leftSong.popularity <= rightSong.popularity;
+    console.log(higher && clickedHigher);
+    if (higher && clickedHigher) {
+      setCorrectness("correct");
+    } else {
+      setCorrectness("incorrect");
+    }
   };
 
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
+      <div style={styles.middleDivider} />
+      <Zoom
+        in={correctness === "correct"}
+        out={correctness === ""}
+        style={{ transitionDuration: "1s" }}
+      >
+        <Box sx={styles.centered}>
+          <FaCheckCircle size={80} color="lightGreen" />
+        </Box>
+      </Zoom>
+      <Zoom
+        in={correctness === "incorrect"}
+        out={correctness === ""}
+        style={{ transitionDuration: "1s" }}
+      >
+        <Box sx={styles.centered}>
+          <FaTimesCircle size={80} color="red" />
+        </Box>
+      </Zoom>
       {loaded ? (
         <Box>
           <Grid
@@ -84,21 +135,18 @@ function App() {
             sx={styles.outline}
           >
             <Grid item xs>
-              <SongPanel song={leftSong} left={true} />
+              <SongPanel
+                song={leftSong}
+                left={true}
+                checkIfHigher={checkIfHigher}
+              />
             </Grid>
-            <Divider orientation="vertical">
-              <Typography
-                sx={{
-                  fontSize: "40px",
-                  marginBottom: "100px",
-                  paddingTop: "5px",
-                }}
-              >
-                VS
-              </Typography>
-            </Divider>
             <Grid item xs>
-              <SongPanel song={rightSong} left={false} />
+              <SongPanel
+                song={rightSong}
+                left={false}
+                checkIfHigher={checkIfHigher}
+              />
             </Grid>
           </Grid>
         </Box>
