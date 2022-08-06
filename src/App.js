@@ -1,9 +1,9 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import { Grid, Box, Typography, CssBaseline, Zoom } from "@mui/material";
+import { Grid, Box, Typography, CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import SongPanel from "./Components/SongPanel";
-import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import CenterPiece from "./Components/CenterPiece";
 
 const darkTheme = createTheme({
   palette: {
@@ -37,6 +37,7 @@ function App() {
   const [leftSong, setLeftSong] = useState({});
   const [rightSong, setRightSong] = useState({});
   const [correctness, setCorrectness] = useState("");
+  const [score, setScore] = useState(0);
 
   useEffect(() => {
     const options = {
@@ -67,6 +68,12 @@ function App() {
     }
   }, [loaded]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setCorrectness("");
+    }, 1000);
+  }, [leftSong, rightSong]);
+
   const styles = {
     outline: {
       height: "100vh",
@@ -95,36 +102,25 @@ function App() {
 
   const checkIfHigher = (clickedHigher) => {
     const higher = leftSong.popularity <= rightSong.popularity;
-    console.log(higher && clickedHigher);
     if (higher && clickedHigher) {
       setCorrectness("correct");
+      setLeftSong(rightSong);
+      setScore(score + 1);
+      const songIndex = getRandomNumber();
+      setRightSong(processData(playlist[songIndex].track, songIndex));
     } else {
       setCorrectness("incorrect");
+      setScore(0);
     }
   };
 
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <div style={styles.middleDivider} />
-      <Zoom
-        in={correctness === "correct"}
-        out={correctness === ""}
-        style={{ transitionDuration: "1s" }}
-      >
-        <Box sx={styles.centered}>
-          <FaCheckCircle size={80} color="lightGreen" />
-        </Box>
-      </Zoom>
-      <Zoom
-        in={correctness === "incorrect"}
-        out={correctness === ""}
-        style={{ transitionDuration: "1s" }}
-      >
-        <Box sx={styles.centered}>
-          <FaTimesCircle size={80} color="red" />
-        </Box>
-      </Zoom>
+      <Typography sx={{ position: "absolute", left: "45%", fontSize: "25px" }}>
+        Score: {score}
+      </Typography>
+      <CenterPiece correctness={correctness} />
       {loaded ? (
         <Box>
           <Grid
