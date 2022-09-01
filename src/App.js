@@ -1,9 +1,10 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Grid, Box, Typography, CssBaseline } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import SongPanel from "./Components/SongPanel";
 import CenterPiece from "./Components/CenterPiece";
+import apiKey from "./apiKey";
 
 const darkTheme = createTheme({
   palette: {
@@ -40,10 +41,12 @@ function App() {
   const [score, setScore] = useState(0);
 
   useEffect(() => {
+    const key = apiKey();
+    console.log(key);
     const options = {
       method: "GET",
       headers: {
-        "X-RapidAPI-Key": "e43a7dd975msh3f626b2de6f059dp18d7e0jsnf6dbf90078d3",
+        "X-RapidAPI-Key": key,
         "X-RapidAPI-Host": "spotify23.p.rapidapi.com",
       },
     };
